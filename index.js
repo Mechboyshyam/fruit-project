@@ -34,8 +34,8 @@ app.get('/all-friend-names', (req,res)=>{
 })
 
 // if you want to add new item use post method
-app.post('/add friend name', (req,res)=>{
-    // const {id, title, name, email} = req.body;
+app.post('/add-friend-name', (req,res)=>{
+     const {id, title, name, email} = req.body;
 
     const newFriend ={
         id : 'id',
@@ -65,6 +65,66 @@ app.post('/add friend name', (req,res)=>{
     })
 })
 
+
+app.get('/friend-name-by-id', (req, res) => {
+    // read id from query params
+    const id = req.query.id
+  
+    db.forEach((item) => {
+      if (item.id == id) {
+        return res.json({
+          success: true,
+          data: item,
+          message: 'Name fetched successfully'
+        })
+      }
+    })
+  
+    res.json({
+      success: false,
+      data: null,
+      message: 'Name not found'
+    })
+  })
+  
+  app.get('/delete-name-by-id', (req, res) => {
+    const id = req.query.id
+  
+    db.forEach((item, index) => {
+      if (item.id == id) {
+        db.splice(index, 1)
+        return res.json({
+          success: true,
+          data: db,
+          message: 'Name deleted successfully'
+        })
+      }
+    })
+  
+    res.json({
+      success: false,
+      data: null,
+      message: 'Name not found'
+    })
+  })
+  
+  app.get('/name-by-category', (req, res) => {
+    const category = req.query.category
+  
+    const temp = []
+  
+    db.forEach((item) => {
+      if (item.category === category) {
+        temp.push(item)
+      }
+    })
+  
+    res.json({
+      success: true,
+      data: temp,
+      message: `names for ${category} fetched successfully`
+    })
+  })
 
 
 app.listen(5000, ()=>{
